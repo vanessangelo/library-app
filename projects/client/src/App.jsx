@@ -2,24 +2,27 @@ import axios from "axios";
 import logo from "./logo.svg";
 import { useEffect, useState } from "react";
 
-function App() {
-  const [message, setMessage] = useState("");
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import PrivateWrapper from "./wrapper/PrivateWrapper";
+import Home from "./pages/Home";
+import PublicWrapper from "./wrapper/PublicWrapper";
+import HistoryPage from "./pages/HistoryPage";
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/greetings`
-      );
-      setMessage(data?.message || "");
-    })();
-  }, []);
+function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        {message}
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route element={<PrivateWrapper />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/history" element={<HistoryPage />} />
+        </Route>
+
+        <Route element={<PublicWrapper />}>
+          <Route path="/login" element={<Login />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
