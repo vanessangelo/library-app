@@ -23,7 +23,6 @@ module.exports = {
         .status(200)
         .send({ message: "Profile retrieved successfully", data: myProfile });
     } catch (error) {
-      console.log(error);
       return res.status(500).send({
         message: "Internal Server Error",
       });
@@ -35,24 +34,24 @@ module.exports = {
     try {
       const book_id = req.params.id;
       const book_title = req.params.title;
-      const book_main_author = req.params.author;
-      const book_ISBN = req.params.isbn;
+      const book_main_author = req.params.author || "No Author";
+      const book_ISBN = req.params.isbn || "-";
       const user_id = req.user.id;
-      
+
       const isUserBorrowing = await db.Borrow_Book.findOne({
         where: {
           user_id,
-          isBorrow: true
-        }
-      })
-      
+          isBorrow: true,
+        },
+      });
+
       if (isUserBorrowing) {
         await transaction.rollback();
         return res.status(404).send({
           message: "Please first return current borrowed book.",
         });
       }
-      
+
       const isBorrowed = await db.Borrow_Book.findOne({
         where: {
           book_id,
@@ -84,6 +83,7 @@ module.exports = {
         data: borrowData,
       });
     } catch (error) {
+      await transaction.rollback();
       return res.status(500).send({
         message: "fatal error on server",
         error: error.message,
@@ -116,11 +116,12 @@ module.exports = {
 
       await transaction.commit();
 
-      return res.status(201).send({
+      return res.status(200).send({
         message: "Successfully returned",
         data: getBorrowHistory,
       });
     } catch (error) {
+      await transaction.rollback();
       return res.status(500).send({
         message: "fatal error on server",
         error: error.message,
@@ -164,13 +165,13 @@ module.exports = {
       });
     }
   },
-  
+
   async getOngoingBook(req, res) {
     try {
       const results = await db.Borrow_Book.findOne({
         where: {
           user_id: req.user.id,
-          isBorrow: true
+          isBorrow: true,
         },
       });
 
@@ -179,10 +180,55 @@ module.exports = {
           message: "No borrow book(s) found",
         });
       }
-      console.log("kena controller")
       res.status(200).send({
         message: "Successfully retrieved borrowed books",
         data: results,
+      });
+    } catch (error) {
+      return res.status(500).send({
+        message: "fatal error on server",
+        error: error,
+      });
+    }
+  },
+
+  async deleteAccount(req, res) {
+    const transaction = await db.sequelize.transaction();
+    try {
+      const { id } = req.user;
+
+      const user = await db.User.findOne({
+        where: {
+          id
+        }
+      }, transaction)
+
+      if(!user) {
+        await transaction.rollback()
+        return res.status(404).send({
+          message: "User not found."
+        })
+      }
+
+      const isOngoing = await db.Borrow_Book.findOne({
+        where: {
+          user_id: id,
+          isBorrow: true,
+        },
+      }, transaction);
+
+      if(isOngoing) {
+        isOngoing.isBorrow = false
+        isOngoing.return_date = new Date()
+        await isOngoing.save({ transaction });
+      }
+
+      await user.destroy({ transaction });
+
+      await transaction.commit();
+
+      res.status(200).send({
+        message: "Successfully delete user",
       });
     } catch (error) {
       return res.status(500).send({
