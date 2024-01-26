@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
   Borrow_Book.init({
     user_id: DataTypes.INTEGER,
     book_id: DataTypes.STRING,
+    book_title: DataTypes.STRING,
+    book_main_author: DataTypes.STRING,
+    book_ISBN: DataTypes.STRING,
     isBorrow: DataTypes.BOOLEAN,
     borrow_date: DataTypes.DATE,
     return_date: DataTypes.DATE
