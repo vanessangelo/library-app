@@ -26,7 +26,7 @@ export default function Login() {
     };
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email("Please enter email format").required("Email is required"),
+        email: Yup.string().required("Email is required"),
         password: Yup.string().required("Password is required"),
     });
 
@@ -37,26 +37,21 @@ export default function Login() {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/login`, values);
             if (response.status === 200) {
-                console.log("kena 200")
-                console.log("ini data", response.data)
                 const { accessToken } = response.data;
-                console.log(accessToken)
                 localStorage.setItem("token", accessToken);
                 dispatch(keep(response.data));
                 resetForm();
                 setStatus({ success: true, accessToken });
                 const ongoingBook = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users/ongoing-books`, { headers: { Authorization: `Bearer ${accessToken}` } });
-                console.log(ongoingBook.data)
-                if (ongoingBook.data) {
-                    console.log("kena ongoingBook.data")
+                if (ongoingBook.data.data) {
                     const { data } = ongoingBook.data;
                     if (Object.keys(data).length !== 0) {
                         dispatch(getOngoingBook(data));
                         dispatch(updateIsOngoing(true));
                     }
-                    navigate("/");
                 }
             }
+            navigate("/");
         } catch (error) {
             setFieldError("email", "Incorrect email and/or password");
             setFieldError("password", "Incorrect email and/or password");

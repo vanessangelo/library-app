@@ -1,13 +1,7 @@
 import React, { useState } from 'react'
-import { remove } from '../../store/reducer/authSlice';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { removeIsOngoing, removeOngoingBook } from '../../store/reducer/borrowSlice';
 
-export default function ModalLogout() {
+export default function Return({bookId, handleReturn}) {
     const [openModal, setOpenModal] = useState(false);
-    const dispatch = useDispatch();
-    const navigate = useNavigate()
 
     const handleOpenModal = (e) => {
         e.preventDefault();
@@ -18,21 +12,10 @@ export default function ModalLogout() {
         setOpenModal(false);
     };
 
-    const handleLogout = () => {
-        dispatch(remove());
-        dispatch(removeOngoingBook());
-        dispatch(removeIsOngoing());
-        localStorage.removeItem("token");
-        navigate("/login");
-
-    };
-
     return (
         <>
-            <button className='items-center text-white hover:bg-white hover:text-amber-800' onClick={handleOpenModal} >
-                <div>Log Out</div>
-            </button>
-            {openModal && (
+        <button type="button" className='w-full py-2 px-4 bg-orange-800 text-center text-white rounded-md border border-amber-800 hover:bg-amber-950' onClick={handleOpenModal}>Return</button>
+        {openModal && (
                 <div
                     id="staticModal"
                     tabIndex={-1}
@@ -45,7 +28,7 @@ export default function ModalLogout() {
                             {/* Modal header */}
                             <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                                    LOG OUT
+                                    Return Book
                                 </h3>
                                 <button
                                     type="button"
@@ -74,7 +57,7 @@ export default function ModalLogout() {
                             {/* Modal body */}
                             <div className="p-6 space-y-6">
                                 <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400 text-center mx-auto">
-                                    Are you sure you want to log out?
+                                    Are you sure you want to return the book?
                                 </p>
                             </div>
                             {/* Modal footer */}
@@ -82,7 +65,7 @@ export default function ModalLogout() {
                                 <button className='bg-white px-4 mr-2 h-10 rounded-lg text-gray-500 border border-gray-400 text-base w-full hover:bg-gray-200' onClick={handleCloseModal} type="button" >
                                     Cancel
                                 </button>
-                                <button className='bg-red-600 px-4 mr-2 h-10 rounded-lg text-white border border-red-600 text-base w-full hover:bg-white hover:text-red-600' onClick={handleLogout} type="button" >
+                                <button className='bg-amber-800 px-4 mr-2 h-10 rounded-lg text-white border border-amber-800 text-base w-full hover:bg-white hover:text-amber-800' onClick={handleReturn} type="button" >
                                     Yes
                                 </button>
                             </div>
