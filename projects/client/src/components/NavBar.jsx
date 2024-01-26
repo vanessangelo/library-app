@@ -29,7 +29,7 @@ export default function Navbar() {
             <div className='grid grid-flow-col shadow-lg font-inter bg-yellow-800'>
                 <div className='m-4 z-50'>
                     <Link to="/" className='flex w-fit'>
-                        <SiBookstack className='text-white text-5xl text-center mx-4 cursor-pointer' />
+                        <SiBookstack className='text-white text-2xl sm:text-5xl text-center mx-4 cursor-pointer' />
                         <div className='hidden sm:block text-center text-white text-2xl font-bold py-1 cursor-pointer'>LIBRARY</div>
                     </Link>
                 </div>
@@ -51,9 +51,9 @@ export default function Navbar() {
                 </div>
             )}
             {isMenuOpen && (
-                <div className='absolute right-0 bg-yellow-800 text-white shadow-lg top-20 py-4 grid gap-2'>
+                <div className='absolute right-0 bg-yellow-800 text-white shadow-lg top-13 sm:top-20 py-4 grid gap-2 z-20'>
                     <div className='flex pl-4 pr-9'>{profile.email}</div>
-                    <Link to="/history" className={`flex pl-4 hover:bg-white hover:text-amber-700 ${location.pathname.includes("/history") ? `font-bold ` : ``}`}>
+                    <Link to="/history" className={`flex pl-4 hover:bg-white hover:text-amber-700 hover:font-bold ${location.pathname.includes("/history") ? `font-bold ` : ``}`}>
                         History
                     </Link>
                     <div className='flex pl-4 hover:bg-white hover:text-amber-700 hover:font-bold'>
