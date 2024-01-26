@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Pagination } from 'flowbite-react';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import Navbar from '../components/NavBar'
 import { removeOngoingBook, updateIsOngoing } from '../store/reducer/borrowSlice';

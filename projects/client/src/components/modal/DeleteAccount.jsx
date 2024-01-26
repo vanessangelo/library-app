@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { remove } from '../../store/reducer/authSlice';
+import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { removeIsOngoing, removeOngoingBook } from '../../store/reducer/borrowSlice';
+import { remove } from '../../store/reducer/authSlice';
 
-export default function ModalLogout() {
+export default function DeleteAccount() {
     const [openModal, setOpenModal] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const token = localStorage.getItem("token");
+
 
     const handleOpenModal = (e) => {
         e.preventDefault();
@@ -18,20 +21,24 @@ export default function ModalLogout() {
         setOpenModal(false);
     };
 
-    const handleLogout = () => {
-        dispatch(remove());
-        dispatch(removeOngoingBook());
-        dispatch(removeIsOngoing());
-        localStorage.removeItem("token");
-        navigate("/login");
-
-    };
+    const handleDelete = async () => {
+        try {
+            const deleteAccount = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/users`, { headers: { Authorization: `Bearer ${token}` } })
+            if (deleteAccount.data) {
+                dispatch(remove());
+                dispatch(removeOngoingBook());
+                dispatch(removeIsOngoing());
+                localStorage.removeItem("token");
+                navigate("/login");
+            }
+        } catch (error) {
+            console.warn(error.message)
+        }
+    }
 
     return (
         <>
-            <button className='items-center text-white hover:bg-white hover:text-amber-800' onClick={handleOpenModal} >
-                <div>Log Out</div>
-            </button>
+            <button type="button" className='w-full py-2 px-4 bg-red-900 text-center text-red-300 rounded-md border border-red-900 hover:bg-red-950 font-bold text-sm' onClick={handleOpenModal}>Delete Account</button>
             {openModal && (
                 <div
                     id="staticModal"
@@ -45,7 +52,7 @@ export default function ModalLogout() {
                             {/* Modal header */}
                             <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                                    LOG OUT
+                                    Delete Account
                                 </h3>
                                 <button
                                     type="button"
@@ -74,7 +81,7 @@ export default function ModalLogout() {
                             {/* Modal body */}
                             <div className="p-6 space-y-6">
                                 <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400 text-center mx-auto">
-                                    Are you sure you want to log out?
+                                    Are you sure you want to delete this account?
                                 </p>
                             </div>
                             {/* Modal footer */}
@@ -82,7 +89,7 @@ export default function ModalLogout() {
                                 <button className='bg-white px-4 mr-2 h-10 rounded-lg text-gray-500 border border-gray-400 text-base w-full hover:bg-gray-200' onClick={handleCloseModal} type="button" >
                                     Cancel
                                 </button>
-                                <button className='bg-red-600 px-4 mr-2 h-10 rounded-lg text-white border border-red-600 text-base w-full hover:bg-white hover:text-red-600' onClick={handleLogout} type="button" >
+                                <button className='bg-amber-800 px-4 mr-2 h-10 rounded-lg text-white border border-amber-800 text-base w-full hover:bg-white hover:text-amber-800' onClick={handleDelete} type="button" >
                                     Yes
                                 </button>
                             </div>

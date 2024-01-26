@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 
 import Navbar from '../components/NavBar';
 import Search from '../components/Search';
-import handleCoverError from '../helpers/handleCoverError';
 import BookCard from '../components/BookCard';
 
 export default function Home() {
@@ -15,8 +13,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
-
-  const dispatch = useDispatch()
   const token = localStorage.getItem("token")
 
   const getBooks = async () => {

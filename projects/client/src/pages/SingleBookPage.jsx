@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { HiOutlineChevronLeft } from "react-icons/hi";
 
@@ -16,7 +16,6 @@ export default function SingleBookPage() {
     const dispatch = useDispatch();
     const token = localStorage.getItem("token");
     const isOngoing = useSelector((state) => state.borrow.isOngoing);
-    const ongoingDetails = useSelector((state) => state.borrow.ongoingBook);
 
 
     const getOneBook = async () => {
