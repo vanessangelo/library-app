@@ -34,7 +34,7 @@ module.exports = {
         return res.status(400).send({ message: "Invalid credential" });
       }
     } catch (error) {
-      console.log(error.message);
+      console.warn(error.message);
       res
         .status(500)
         .send({ message: "Fatal error on server.", error: error.message });
@@ -64,7 +64,7 @@ module.exports = {
         },
       });
     } catch (error) {
-      console.log(error);
+      console.warn(error);
       res
         .status(500)
         .send({ message: "Fatal error on server.", error: error.message });
