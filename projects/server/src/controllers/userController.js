@@ -34,6 +34,9 @@ module.exports = {
     const transaction = await db.sequelize.transaction();
     try {
       const book_id = req.params.id;
+      const book_title = req.params.title;
+      const book_main_author = req.params.author;
+      const book_ISBN = req.params.isbn;
       const user_id = req.user.id;
       
       const isUserBorrowing = await db.Borrow_Book.findOne({
@@ -67,6 +70,9 @@ module.exports = {
       const borrowData = await db.Borrow_Book.create({
         user_id,
         book_id,
+        book_title,
+        book_main_author,
+        book_ISBN,
         isBorrowed: true,
         borrow_date: new Date(),
       });

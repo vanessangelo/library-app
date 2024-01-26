@@ -5,7 +5,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 router.use(authMiddleware.verifyToken)
 
 router.get("/profile", userController.getProfile);
-router.post("/books/:id", userController.borrowBook);
+router.post("/books/:id/:title/:author/:isbn", userController.borrowBook);
 router.patch("/borrow-books/:id", userController.returnBook);
 router.get("/borrow-books", userController.getBorrowBooks);
 router.get("/ongoing-books", userController.getOngoingBook);

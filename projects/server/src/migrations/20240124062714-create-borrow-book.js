@@ -21,6 +21,18 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      book_title: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      book_main_author: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      book_ISBN: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       isBorrow: {
         type: Sequelize.BOOLEAN,
         defaultValue: true
