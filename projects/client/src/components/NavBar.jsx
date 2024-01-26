@@ -4,9 +4,9 @@ import { Link, useLocation } from "react-router-dom";
 import ModalLogout from '../components/modal/LogOut';
 import { SiBookstack } from 'react-icons/si';
 import { IoMdAlert } from "react-icons/io";
+import DeleteAccount from './modal/DeleteAccount';
 
 export default function Navbar() {
-    const token = localStorage.getItem("token")
     const profile = useSelector((state) => state.auth.profile?.user)
     const isBorrowing = useSelector((state) => state.borrow.isOngoing)
     const location = useLocation()
@@ -40,7 +40,7 @@ export default function Navbar() {
                                 <IoMdAlert />
                             </div>
                         )}
-                        <div className='flex items-center text-white text-base sm:text-xl hover:font-bold cursor-pointer' onClick={handleMenuOpen}>Hi, {profile.name}!</div>
+                        <div className='flex items-center text-white text-base sm:text-xl hover:font-bold cursor-pointer' onClick={handleMenuOpen}>Hi, {profile?.name}!</div>
                     </div>
                 </div>
             </div>
@@ -52,12 +52,15 @@ export default function Navbar() {
             )}
             {isMenuOpen && (
                 <div className='absolute right-0 bg-yellow-800 text-white shadow-lg top-13 sm:top-20 py-4 grid gap-2 z-20'>
-                    <div className='flex pl-4 pr-9'>{profile.email}</div>
+                    <div className='flex pl-4 pr-9'>{profile?.email}</div>
                     <Link to="/history" className={`flex pl-4 hover:bg-white hover:text-amber-700 hover:font-bold ${location.pathname.includes("/history") ? `font-bold ` : ``}`}>
                         History
                     </Link>
                     <div className='flex pl-4 hover:bg-white hover:text-amber-700 hover:font-bold'>
                         <ModalLogout />
+                    </div>
+                    <div className='flex pl-4 pr-9 pt-6'>
+                        <DeleteAccount />
                     </div>
                 </div>
             )}
